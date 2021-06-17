@@ -1,6 +1,5 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, metadata, near_bindgen, setup_alloc};
-
 use std::collections::HashMap;
 
 setup_alloc!();
@@ -18,7 +17,24 @@ metadata! {
 }
 
 #[near_bindgen]
+impl Default for Cedi {
+    fn default() -> Self {
+        let mut balances = HashMap::new();
+        let max_supply: u64 = 500_000__000;
+        balances.insert(env::signer_account_pk(), max_supply);
+        Self {
+            balances,
+            allowances: HashMap::new(),
+            owner: env::signer_account_pk(),
+            ticker: String::from("Cedi"),
+            max_supply,
+        }
+    }
+}
+
+#[near_bindgen]
 impl Cedi {
+    #[payable]
     pub fn transfer(&mut self, to: &[u8], amount: u64) -> bool {
         let from_id = env::signer_account_pk();
         let to_id = to.to_vec();
@@ -36,6 +52,7 @@ impl Cedi {
         true
     }
 
+    #[payable]
     pub fn transfer_from(&mut self, from: &[u8], to: &[u8], amount: u64) -> bool {
         let from_id = from.to_vec();
         let spender_id = env::signer_account_pk();
@@ -73,20 +90,5 @@ impl Cedi {
     pub fn get_balance_of(&self, owner: &[u8]) -> &u64 {
         let owner = owner.to_vec();
         self.balances.get(&owner).unwrap_or(&0)
-    }
-}
-
-impl Default for Cedi {
-    fn default() -> Self {
-        let mut balances = HashMap::new();
-        let max_supply: u64 = 500_000__000;
-        balances.insert(env::signer_account_pk(), max_supply);
-        Self {
-            balances,
-            allowances: HashMap::new(),
-            owner: env::signer_account_pk(),
-            ticker: String::from("Cedi"),
-            max_supply,
-        }
     }
 }
