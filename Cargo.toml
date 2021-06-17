@@ -1,7 +1,7 @@
 [package]
 name = "cedi"
 version = "0.1.0"
-description = "An ERC20 (fungible) token implementation for NEAR"
+description = "A simple ERC20 (fungible) token implementation for NEAR"
 repository = "https://github.com/kobby-pentangeli/cedi"
 authors = ["Kobby Pentangeli <kobbypentangeli@gmail.com>"]
 license = "MIT"
